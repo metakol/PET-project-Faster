@@ -6,6 +6,8 @@ module com.github.metakol.ourpetproject {
     requires com.dlsc.formsfx;
     requires validatorfx;
 
+
     opens com.github.metakol to javafx.fxml;
+    opens com.github.metakol.controllers to javafx.fxml;
     exports com.github.metakol;
 }

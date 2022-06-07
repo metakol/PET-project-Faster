@@ -1,5 +1,6 @@
 package com.github.metakol.controllers;
 
+import com.github.metakol.Launch;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -32,7 +33,7 @@ public class MainSceneController {
         Stage stage = (Stage) register.getScene().getWindow();
         // do what you have to do
         stage.close();
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/registrate.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Launch.class.getResource("scenes/registrate.fxml"));
         Parent root1 = null;
         try {
             root1 = (Parent) fxmlLoader.load();
