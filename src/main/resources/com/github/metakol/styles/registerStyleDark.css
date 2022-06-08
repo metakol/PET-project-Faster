@@ -1,0 +1,25 @@
+.root{
+    -fx-font-family: "Yu Gothic";
+    -fx-font-size: 14px;
+    -fx-text-fill: #f3c0f3;
+    -fx-background-color: #513651;
+    -fx-background-image: url("images/veg7revcolored.png");
+    -fx-background-size: 220 370;
+    -fx-background-position: 25, center;
+    -fx-background-repeat: no-repeat;
+}
+.button
+{
+    -fx-background-color: #3f1e3f;
+    -fx-text-alignment: center;
+    -fx-text-fill: #f3c0f3;
+}
+.text-field{
+    -fx-prompt-text-fill: #f3c0f3;
+    -fx-background-color: #B999B9;
+    -fx-border-color: #ffffff;
+}
+button:hover{
+    -fx-background-color: #18B356;
+    -fx-background-radius: 40;
+}

@@ -1,44 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #99FF99;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.github.metakol.controllers.MainSceneController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.github.metakol.controllers.MainSceneController">
    <children>
-      <Button fx:id="goButton"
-              onAction="#goButtonClicked"
-              onMouseClicked="#changeGoColor" contentDisplay="TOP" layoutX="286.0" layoutY="300.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="115.0" style="-fx-background-color: #18B356;"  textAlignment="CENTER" textFill="#060606" textOverrun="WORD_ELLIPSIS">
-         GO
-         <font>
-            <Font name="Yu Gothic Regular" size="18.0" />
-         </font>
+      <Button fx:id="goButton" contentDisplay="TOP" layoutX="343.0" layoutY="249.0" mnemonicParsing="false" onAction="#goButtonClicked" onMouseClicked="#changeGoColor" prefHeight="25.0" prefWidth="115.0" text="Sign in" textOverrun="WORD_ELLIPSIS">
       </Button>
-      <TextField fx:id="loginField"
-                 layoutX="278.0" layoutY="79.0" prefHeight="25.0" prefWidth="245.0" promptText="Login" style="-fx-background-color: #ccffcc; -fx-border-color: #ffffff;">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </TextField>
-      <TextField fx:id="passwordField"
-                 layoutX="278.0" layoutY="138.0" prefHeight="32.0" prefWidth="245.0" promptText="Password" style="-fx-background-color: #ccffcc; -fx-border-color: #ffffff;">
-         <font>
-            <Font size="14.0" />
-         </font></TextField>
-      <ImageView fitHeight="347.0" fitWidth="261.0" layoutX="37.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@images/veg1.png" />
-         </image>
-      </ImageView>
-      <Button fx:id="register"
-              onAction="#goToRegisterScene"
-              layoutX="278.0" layoutY="200.0" mnemonicParsing="false" style="-fx-background-color: AnchorPane;"  textFill="#15711d" underline="true">
+      <TextField fx:id="loginField" layoutX="278.0" layoutY="79.0" prefHeight="25.0" prefWidth="245.0" promptText="Login" />
+      <TextField fx:id="passwordField" layoutX="278.0" layoutY="138.0" prefHeight="32.0" prefWidth="245.0" promptText="Password" />
+      <Button fx:id="register" layoutX="278.0" layoutY="200.0" mnemonicParsing="false" onAction="#goToRegisterScene" style="-fx-background-color: AnchorPane;" underline="true">
          or you can register by clicking here
-         <font>
-            <Font name="Yu Gothic Regular" size="12.0" />
-         </font>
       </Button>
+      <Button fx:id="darkThemeButton" onAction="#enableDarkTheme"
+              layoutX="404.0" layoutY="354.0" mnemonicParsing="false" text="Switch to the dark theme" />
    </children>
 </AnchorPane>

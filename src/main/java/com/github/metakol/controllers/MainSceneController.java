@@ -12,15 +12,23 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class MainSceneController {
+    public boolean isDarkThemeOn = false;
     public MainSceneController(){
 
     }
     public Button goButton;
     public Button register;
+    public Button darkThemeButton;
     public TextField loginField;
     public TextField passwordField;
     public void changeGoColor(){
         goButton.setStyle("-fx-background-color:#b2ff66");
+    }
+
+    public void enableDarkTheme(){
+        Scene scene = (Scene) darkThemeButton.getScene();
+        scene.getStylesheets().add(Launch.class.getResource("styles/mainStyleDark.css").toExternalForm());
+        isDarkThemeOn = true;
     }
     public void goButtonClicked(){
 //        User currentUser = new User();
@@ -34,16 +42,22 @@ public class MainSceneController {
         // do what you have to do
         stage.close();
         FXMLLoader fxmlLoader = new FXMLLoader(Launch.class.getResource("scenes/registrate.fxml"));
-        Parent root1 = null;
+        Parent scene = null;
         try {
-            root1 = (Parent) fxmlLoader.load();
+            scene = (Parent) fxmlLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
         stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("Registration");
-        stage.setScene(new Scene(root1));
+        stage.setScene(new Scene(scene));
+        if(isDarkThemeOn){
+            scene.getStylesheets().add(Launch.class.getResource("styles/registerStyleDark.css").toExternalForm());
+        }
+        else{
+            scene.getStylesheets().add(Launch.class.getResource("styles/registerStyleLight.css").toExternalForm());
+        }
         stage.show();
     }
 
