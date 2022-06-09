@@ -7,12 +7,13 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.EventObject;
 
 public class Scenes {
-    public static void sceneChange(EventObject event, String FXMLfile) {
+    public static void sceneChange(EventObject event, URL FXMLfile) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(Launch.class.getResource(FXMLfile));
+            FXMLLoader fxmlLoader = new FXMLLoader(FXMLfile);
             Scene scene = new Scene(fxmlLoader.load());
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);

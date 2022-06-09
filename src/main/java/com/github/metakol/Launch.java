@@ -14,6 +14,7 @@ public class Launch extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(Launch.class.getResource("scenes/mainScene.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Hello!");
+        scene.getStylesheets().add(Launch.class.getResource("styles/mainStyleDark.css").toExternalForm());
         scene.getStylesheets().add(Launch.class.getResource("styles/mainStyleLight.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
