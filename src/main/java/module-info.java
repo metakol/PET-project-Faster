@@ -6,6 +6,8 @@ module com.github.metakol.ourpetproject {
     requires validatorfx;
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
+    requires javafx.graphics;
+    requires java.sql;
 
     opens com.github.metakol to javafx.fxml;
     opens com.github.metakol.controllers to javafx.fxml;

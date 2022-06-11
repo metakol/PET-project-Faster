@@ -1,5 +1,6 @@
 package com.github.metakol.controllers;
 
+import com.github.metakol.DBHandler.DBHandler;
 import com.github.metakol.Launch;
 import com.github.metakol.entities.User;
 import com.github.metakol.helpers.Scenes;
@@ -23,6 +24,7 @@ public class MainSceneController {
     private TextField loginField;
     @FXML
     private PasswordField passwordField;
+    
 
     @FXML
     void onClickRegister(MouseEvent event) {
@@ -51,7 +53,12 @@ public class MainSceneController {
         //
         System.out.println(loginField.getText());
         System.out.println(passwordField.getText());
+        DBHandler handler=new DBHandler();
+        handler.connection();
         return user;
     }
+        
+    
+
 
 }
