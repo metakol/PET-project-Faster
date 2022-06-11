@@ -5,6 +5,7 @@ module com.github.metakol {
     requires com.dlsc.formsfx;
     requires validatorfx;
     requires javafx.graphics;
+    requires java.sql;
 
     opens com.github.metakol to javafx.fxml;
     opens com.github.metakol.controllers to javafx.fxml;

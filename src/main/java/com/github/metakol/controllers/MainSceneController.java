@@ -1,5 +1,6 @@
 package com.github.metakol.controllers;
 
+import com.github.metakol.DBHandler.DBHandler;
 import com.github.metakol.Launch;
 import com.github.metakol.helpers.Scenes;
 import javafx.fxml.FXML;
@@ -43,22 +44,19 @@ public class MainSceneController {
         //TODO Подключение к бд, проверка юзера, авторизация
         System.out.println(loginField.getText());
         System.out.println(passwordField.getText());
+        DBHandler handler=new DBHandler();
+        handler.connection();
     }
-
-
-    private boolean isFirstClickOnSwapScene = true;
 
     @FXML
     void onClickSwapTheme(MouseEvent event) {
-
-
-
         /* TODO Темы
          * Две наши цветовые темы добавлены в классе Launch
          * А в методе swapTheme() мы меняем их положение, так как он отображает ту, что идёт позже
          * А если в коде будем добавлять тему, как было у тебя, а не свапать их местами, то к окну у нас будет подключенно
          * куча одинаковых файлов. Поэтому вроде пока что оптимальный вариант.
          * */
+
         Scene scene = ((Button) event.getSource()).getScene();
 
         /*
@@ -88,13 +86,6 @@ public class MainSceneController {
         scene.getStylesheets().set(0, scene.getStylesheets().get(1));
         scene.getStylesheets().set(1, bufURL);
     }
-
-
-//    public Button goButton;
-//    public Button register;
-//    public Button darkThemeButton;
-//    public TextField loginField;
-//    public TextField passwordField;
 
 //    public void goButtonClicked(){
 //      User currentUser = new User();
