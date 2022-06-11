@@ -19,7 +19,3 @@
     -fx-background-color: #B999B9;
     -fx-border-color: #ffffff;
 }
-button:hover{
-    -fx-background-color: #18B356;
-    -fx-background-radius: 40;
-}
