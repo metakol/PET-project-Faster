@@ -1,4 +1,4 @@
-module com.github.metakol.ourpetproject {
+module com.github.metakol.ourpetproject{
     requires javafx.controls;
     requires javafx.fxml;
     requires org.controlsfx.controls;
