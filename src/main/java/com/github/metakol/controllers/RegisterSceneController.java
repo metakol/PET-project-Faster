@@ -1,5 +1,6 @@
 package com.github.metakol.controllers;
 
+import com.github.metakol.DBEntities.UsersTableColumns;
 import com.github.metakol.DBHandler.DBHandler;
 import com.github.metakol.Launch;
 import com.github.metakol.helpers.Scenes;
@@ -31,7 +32,7 @@ public class RegisterSceneController {
         String login = emailField.getText();
         String pass = passField.getText();
         String name = nameField.getText();
-        if (isUniquenessLogin(login)) {
+        if (isUniqueLogin(login)) {
             createAccount(login, pass, name);
             onClickGoBack(event);
         } else {
@@ -39,11 +40,15 @@ public class RegisterSceneController {
         }
     }
 
-    private boolean isUniquenessLogin(String login) {
-        DBHandler handler=new DBHandler();
+    private boolean isUniqueLogin(String login) {
+        DBHandler handler = new DBHandler();
         handler.open();
-        String sql="SELECT login FROM Users WHERE login='"+login+"'";
-        try(Statement statement=handler.getStatement(); ResultSet resultSet=statement.executeQuery(sql)){
+        String sql = String.format("SELECT %s FROM %s WHERE %s = '%s';",
+                UsersTableColumns.LOGIN.getNameInDB(), UsersTableColumns.TABLE_NAME.getNameInDB(),
+                UsersTableColumns.LOGIN.getNameInDB(),
+                login);
+        try(Statement statement = handler.getStatement();
+            ResultSet resultSet = statement.executeQuery(sql)){
             if(resultSet.next()){
                 System.out.println("Такой юзер уже есть");
                 return false;
@@ -58,10 +63,15 @@ public class RegisterSceneController {
     }
 
     private void createAccount(String login, String pass, String name) {
-        DBHandler handler=new DBHandler();
+        DBHandler handler = new DBHandler();
         handler.open();
-        try(Statement statement=handler.getStatement()){
-            String sql="INSERT INTO Users (login,password,name,isDarkThemeOn) VALUES ('"+login+"','"+pass+"','"+name+"','0')";
+        try(Statement statement = handler.getStatement()){
+            String s = String.format("INSERT INTO %s (%s, %s, %s, %s) VALUES ('%s', '%s', '%s', %s);",
+                    UsersTableColumns.TABLE_NAME.getNameInDB(),
+                    UsersTableColumns.LOGIN.getNameInDB(),UsersTableColumns.PASSWORD.getNameInDB(),
+                    UsersTableColumns.NAME.getNameInDB(), UsersTableColumns.IS_DARK_THEME_ON.getNameInDB(),
+                    login, pass, name, '0');
+            String sql = "INSERT INTO Users (login,password,name,isDarkThemeOn) VALUES ('"+login+"','"+pass+"','"+name+"','0')";
             statement.executeUpdate(sql);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
