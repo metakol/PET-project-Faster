@@ -98,7 +98,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.github.metakol.ourpetproject/com.github.metakol.Launch
+                                com.github.metakol/com.github.metakol.Launch
                             </mainClass>
                         </configuration>
                     </execution>
