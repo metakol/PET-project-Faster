@@ -59,18 +59,22 @@ public class MainSceneController {
                     return true;
                 }
             }
-            showInvalidLoginOrPasswordMessage();
         } catch (SQLException throwable) {
             throwable.printStackTrace();
         }
+        showInvalidLoginOrPasswordMessage();
         return false;
     }
-    public void showInvalidLoginOrPasswordMessage(){
-         invalidLoginOrPasswordMessage.setText("Invalid login or password, try again or go to register");
+
+    private void showInvalidLoginOrPasswordMessage() {
+        invalidLoginOrPasswordMessage.setText("Invalid login or password, try again or go to register");
     }
-    public void hideInvalidLoginOrPasswordMessage(){
+
+    @FXML
+    private void hideInvalidLoginOrPasswordMessage() {
         invalidLoginOrPasswordMessage.setText("");
     }
+
     private User getUser(String login) {
         User user = null;
         String sql = String.format("SELECT * FROM %s WHERE %s='%s';",

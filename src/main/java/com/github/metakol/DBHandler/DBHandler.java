@@ -15,6 +15,7 @@ public class DBHandler implements AutoCloseable {
             e.printStackTrace();
         }
     }
+
     public ResultSet executeQueryStatement(String sqlQuery){
         ResultSet resultSet;
         try{
@@ -26,6 +27,7 @@ public class DBHandler implements AutoCloseable {
         }
         return resultSet;
     }
+
     public void executeUpdateStatement(String sqlQuery){
         try{
             Statement statement = connection.createStatement();

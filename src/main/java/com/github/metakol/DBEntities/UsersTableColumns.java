@@ -8,11 +8,13 @@ public enum UsersTableColumns {
     NAME("name"),
     IS_DARK_THEME_ON("isDarkThemeOn");
 
-    private UsersTableColumns(String name){
+    private UsersTableColumns(String name) {
         this.nameInDB = name;
     }
+
     private String nameInDB;
-    public String getNameInDB(){
+
+    public String getNameInDB() {
         return nameInDB;
     }
 }
