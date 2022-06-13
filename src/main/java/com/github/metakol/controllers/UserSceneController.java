@@ -4,17 +4,21 @@ import com.github.metakol.Launch;
 import com.github.metakol.entities.User;
 import com.github.metakol.helpers.Scenes;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 
 import java.io.File;
 import java.net.URL;
 
 public class UserSceneController {
+
     User user;
     public UserSceneController(User user){
         this.user = user;
         System.out.println(user);
     }
+    @FXML
+    private Label greetingLabel;
 
     @FXML
     void onClickExit(MouseEvent event){

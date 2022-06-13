@@ -1,5 +1,7 @@
-Нахуй иди
+в MainSceneController добавила
+showInvalidLoginOrPasswordMessage() - пишет что неверно введен логин или пароль
+hideInvalidLoginOrPasswordMessage() - при вводе текста в loginField или passwordField
+стирает собщение что что то неверно
 
-Глаза режет, так сам переименуй сцены как тебе надо, я лучше тебя не придумаю че тебе нравится
-С букв БОльШиХ И сОчНыХ лютый кринж конечно
+
 

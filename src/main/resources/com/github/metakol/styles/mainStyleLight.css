@@ -4,7 +4,7 @@
     -fx-background-image: url("images/veg1.png");
     -fx-background-position: 50, center;
     -fx-background-repeat: no-repeat;
-    -fx-background-size: 180.0 400.0 ;
+    -fx-background-size: 180.0 400.0;
 }
 .button
 {

@@ -15,22 +15,13 @@ public class DBHandler implements AutoCloseable {
             e.printStackTrace();
         }
     }
-
-    @Override
-    public void close() {
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Closed");
-    }
     public ResultSet executeQueryStatement(String sqlQuery){
         ResultSet resultSet;
-        try {
+        try{
             Statement statement = connection.createStatement();
             resultSet = statement.executeQuery(sqlQuery);
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return resultSet;
@@ -42,6 +33,15 @@ public class DBHandler implements AutoCloseable {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+    @Override
+    public void close() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Closed");
     }
 
 }

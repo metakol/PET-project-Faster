@@ -7,6 +7,7 @@ import com.github.metakol.entities.User;
 import com.github.metakol.helpers.JacksonUserWriterReader;
 import com.github.metakol.helpers.Scenes;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -18,6 +19,8 @@ import java.sql.Statement;
 
 public class MainSceneController {
 
+    @FXML
+    private Label invalidLoginOrPasswordMessage;
     @FXML
     private TextField loginField;
     @FXML
@@ -56,12 +59,18 @@ public class MainSceneController {
                     return true;
                 }
             }
+            showInvalidLoginOrPasswordMessage();
         } catch (SQLException throwable) {
             throwable.printStackTrace();
         }
         return false;
     }
-
+    public void showInvalidLoginOrPasswordMessage(){
+         invalidLoginOrPasswordMessage.setText("Invalid login or password, try again or go to register");
+    }
+    public void hideInvalidLoginOrPasswordMessage(){
+        invalidLoginOrPasswordMessage.setText("");
+    }
     private User getUser(String login) {
         User user = null;
         String sql = String.format("SELECT * FROM %s WHERE %s='%s';",
