@@ -12,13 +12,13 @@ import java.net.URL;
 public class UserSceneController {
     User user;
     public UserSceneController(User user){
-        this.user=user;
+        this.user = user;
         System.out.println(user);
     }
 
     @FXML
     void onClickExit(MouseEvent event){
-        File file=new File("src/main/resources/com/github/metakol/userData/currentUser.json");
+        File file = new File("src/main/resources/com/github/metakol/userData/currentUser.json");
         file.delete();
         URL url= Launch.class.getResource("scenes/mainScene.fxml");
         Scenes.sceneChange(event,url);

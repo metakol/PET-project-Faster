@@ -2,15 +2,11 @@ package com.github.metakol.DBHandler;
 
 import java.sql.*;
 
-public class DBHandler {
+public class DBHandler implements AutoCloseable {
     private static String nameConnection = "org.sqlite.JDBC";
     private Connection connection;
 
-    public void DBHandler() {
-
-    }
-
-    public void open() {
+    public DBHandler() {
         try {
             Class.forName(nameConnection);
             connection = DriverManager.getConnection("jdbc:sqlite:src/main/resources/com/github/metakol/database/PetDB.db");
@@ -20,6 +16,7 @@ public class DBHandler {
         }
     }
 
+    @Override
     public void close() {
         try {
             connection.close();
@@ -28,9 +25,23 @@ public class DBHandler {
         }
         System.out.println("Closed");
     }
-
-    public Statement getStatement() throws SQLException {
-        return connection.createStatement();
+    public ResultSet executeQueryStatement(String sqlQuery){
+        ResultSet resultSet;
+        try {
+            Statement statement = connection.createStatement();
+            resultSet = statement.executeQuery(sqlQuery);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return resultSet;
+    }
+    public void executeUpdateStatement(String sqlQuery){
+        try{
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(sqlQuery);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
