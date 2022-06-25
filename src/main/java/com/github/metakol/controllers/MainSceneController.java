@@ -15,7 +15,6 @@ import javafx.scene.input.MouseEvent;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class MainSceneController {
 
@@ -28,7 +27,7 @@ public class MainSceneController {
 
     @FXML
     void onClickRegister(MouseEvent event) {
-        URL url = Launch.class.getResource("scenes/registrate.fxml");
+        URL url = Launch.class.getResource("scenes/registration.fxml");
         Scenes.sceneChange(event, url);
     }
 
@@ -37,7 +36,7 @@ public class MainSceneController {
         String login = loginField.getText();
         String password = passwordField.getText();
         if (userIsCorrect(login, password)) {
-            User user = getUser(login);
+            User user = getUserFromDB(login);
             JacksonUserWriterReader.marshall(user);
             URL url = Launch.class.getResource("scenes/userScene.fxml");
             Scenes.sceneChange(event, url, new UserSceneController(user));
@@ -67,6 +66,7 @@ public class MainSceneController {
     }
 
     private void showInvalidLoginOrPasswordMessage() {
+        invalidLoginOrPasswordMessage.setStyle("-fx-font-family: Calibri; -fx-text-fill: #990000; -fx-font-size: 14px");
         invalidLoginOrPasswordMessage.setText("Invalid login or password, try again or go to register");
     }
 
@@ -75,9 +75,9 @@ public class MainSceneController {
         invalidLoginOrPasswordMessage.setText("");
     }
 
-    private User getUser(String login) {
+    private User getUserFromDB(String login) {
         User user = null;
-        String sql = String.format("SELECT * FROM %s WHERE %s='%s';",
+        String sql = String.format("SELECT * FROM %s WHERE %s ='%s';",
                 UsersTableColumns.TABLE_NAME.getNameInDB(), UsersTableColumns.LOGIN.getNameInDB(),
                 login);
         try (DBHandler handler = new DBHandler()) {
@@ -87,7 +87,7 @@ public class MainSceneController {
                     resultSet.getString(UsersTableColumns.PASSWORD.getNameInDB()),
                     resultSet.getString(UsersTableColumns.NAME.getNameInDB()),
                     resultSet.getBoolean(UsersTableColumns.IS_DARK_THEME_ON.getNameInDB()));
-        } catch (SQLException throwables) {
+        } catch (SQLException throwables ) {
             throwables.printStackTrace();
         }
         return user;

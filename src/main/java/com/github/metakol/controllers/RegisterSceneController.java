@@ -53,6 +53,7 @@ public class RegisterSceneController {
 
     private boolean isPasswordValid(String password){
         String pattern = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[._!,-])[0-9a-zA-Z!._,-]{7,20}";
+        invalidPassMessage.setStyle("-fx-font-family: Calibri; -fx-text-fill: #990000; -fx-font-size: 14px");
         if(password.matches(pattern)){
             System.out.println("Password validation successfully");
             return true;

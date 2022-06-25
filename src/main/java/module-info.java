@@ -11,6 +11,7 @@ module com.github.metakol.ourpetproject{
 
     opens com.github.metakol to javafx.fxml;
     opens com.github.metakol.controllers to javafx.fxml;
+    opens com.github.metakol.entities to javafx.base;
     exports com.github.metakol;
     exports com.github.metakol.entities to com.fasterxml.jackson.databind;
 }

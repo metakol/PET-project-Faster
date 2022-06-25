@@ -12,10 +12,6 @@ import java.io.File;
 import java.io.IOException;
 
 public class Launch extends Application {
-
-    //тут вот файл дублируется с тем, который в JacksonUserWriterReader лежит, че с дублированием делать?
-
-    //ничё не дублируется, всё по кайфу
     File currentUserFile = new File("src/main/resources/com/github/metakol/userData/currentUser.json");
 
     @Override

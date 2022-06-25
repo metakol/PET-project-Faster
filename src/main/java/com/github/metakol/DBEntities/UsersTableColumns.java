@@ -2,7 +2,7 @@ package com.github.metakol.DBEntities;
 
 public enum UsersTableColumns {
     TABLE_NAME("Users"),
-    ID("ID"),
+    ID("user_id"),
     LOGIN("login"),
     PASSWORD("password"),
     NAME("name"),

@@ -2,9 +2,10 @@ package com.github.metakol.DBEntities;
 
 public enum CollectionsTableColumns {
     TABLE_NAME("Collections"),
-    ID("ID"),
-    USER_ID("IDUser"),
-    NAME("name");
+    ID("collection_id"),
+    USER_ID("user_id"),
+    NAME("name"),
+    WORDS_NUMBER("words_number");
     private CollectionsTableColumns(String name){
         this.nameInDB = name;
     }
