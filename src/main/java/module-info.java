@@ -8,6 +8,7 @@ module com.github.metakol.ourpetproject{
     requires com.fasterxml.jackson.databind;
     requires javafx.graphics;
     requires java.sql;
+    requires org.apache.logging.log4j;
 
     opens com.github.metakol to javafx.fxml;
     opens com.github.metakol.controllers to javafx.fxml;

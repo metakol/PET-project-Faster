@@ -1,5 +1,6 @@
 package com.github.metakol.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Collection {
@@ -23,7 +24,9 @@ public class Collection {
         this.ID = ID;
     }
 
-    public Collection(){}
+    public Collection(){
+        this.phrases = new ArrayList<>();
+    }
 
 
     public String getName() {

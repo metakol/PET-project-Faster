@@ -10,6 +10,9 @@ public class Phrase {
         this.translation = translation;
     }
 
+    public Phrase(){
+
+    }
     public String getPhrase() {
         return phrase;
     }
@@ -32,5 +35,14 @@ public class Phrase {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Phrase{" +
+                "phrase='" + phrase + '\'' +
+                ", translation='" + translation + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

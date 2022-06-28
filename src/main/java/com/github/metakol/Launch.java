@@ -1,4 +1,5 @@
 package com.github.metakol;
+import org.apache.logging.log4j.*;
 
 import com.github.metakol.controllers.UserSceneController;
 import com.github.metakol.entities.User;
@@ -13,9 +14,11 @@ import java.io.IOException;
 
 public class Launch extends Application {
     File currentUserFile = new File("src/main/resources/com/github/metakol/userData/currentUser.json");
+    Logger logger = LogManager.getRootLogger();
 
     @Override
     public void start(Stage stage) throws IOException {
+        logger.info("Start...");
         FXMLLoader fxmlLoader;
         Scene scene;
         if (currentUserFile.exists()) {

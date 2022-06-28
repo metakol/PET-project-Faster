@@ -3,32 +3,37 @@ package com.github.metakol.controllers;
 import com.github.metakol.DBEntities.CollectionsTableColumns;
 import com.github.metakol.DBEntities.PhrasesTableColumns;
 import com.github.metakol.DBHandler.DBHandler;
+import com.github.metakol.Launch;
 import com.github.metakol.entities.Collection;
 import com.github.metakol.entities.User;
 import com.github.metakol.entities.Phrase;
+import com.github.metakol.helpers.Scenes;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class AddCollectionSceneController {
+    Logger logger = LogManager.getRootLogger();
     Collection collection;
 
     User user;
 
     public AddCollectionSceneController(User user){
+        logger.info("ON ADD COLLECTION SCENE CONTROLLER");
         this.user = user;
         wordsList = FXCollections.observableList(new ArrayList<Phrase>());
     }
-
 
     @FXML
     private TableView wordsTable;
@@ -48,6 +53,9 @@ public class AddCollectionSceneController {
     private TextField translationField;
     @FXML
     private TextField descriptionField;
+
+    @FXML
+    private Label invalidCollectionNameMessage;
 
     @FXML
     void onClickAddWord(MouseEvent event){
@@ -71,17 +79,13 @@ public class AddCollectionSceneController {
                 for(Phrase phrase:wordsList){
 
                     downloadPhraseIntoDB(phrase, downloadedCollectionId);
-                    System.out.println("Слово успешно добавлена");
                 }
-            }
-            else{
-                System.out.println("Коллекции с таким именем не существует.");
+                logger.info("Добавление слов из коллекции в бд: Успешно");
             }
         }
-        else{
-            System.out.println("Не получится создать эту коллекцию, т.к ...");
+        else {
+            showInvalidCollectionNameMessage();
         }
-
     }
     private boolean isCollectionNameUnique(String collectionName){
         String sql = String.format("SELECT * FROM %s WHERE %s = '%s';",
@@ -89,9 +93,10 @@ public class AddCollectionSceneController {
         try(DBHandler handler = new DBHandler()){
             ResultSet resultSet = handler.executeQueryStatement(sql);
             if (resultSet.next()){
-                System.out.println("Коллекция с таким именем уже есть");
+                logger.info("Проверка имени коллекци на уникальность: Неуникальное имя");
                 return false;
             }
+            logger.info("Проверка имени коллекци на уникальность: Уникальное имя");
             return true;
         }
         catch (SQLException e){
@@ -134,10 +139,23 @@ public class AddCollectionSceneController {
             dbHandler.executeUpdateStatement(sql);
         }
     }
+    @FXML
+    private void onClickGBack(MouseEvent event){
+        URL url = Launch.class.getResource("scenes/userScene.fxml");
+        Scenes.sceneChange(event, url, new UserSceneController(user));
+    }
     private void clearWordEntityFields(){
         phraseField.setText("");
         descriptionField.setText("");
         translationField.setText("");
+    }
+    private void showInvalidCollectionNameMessage(){
+        invalidCollectionNameMessage.setStyle("-fx-font-family: Calibri; -fx-text-fill: #990000; -fx-font-size: 14px");
+        invalidCollectionNameMessage.setText("Collection with the same name is already exists, please, rename this collection");
+    }
+    @FXML
+    private void hideInvalidCollectionNameMessage(){
+        invalidCollectionNameMessage.setText("");
     }
 
 }

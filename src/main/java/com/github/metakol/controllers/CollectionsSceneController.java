@@ -1,20 +1,24 @@
 package com.github.metakol.controllers;
 
 import com.github.metakol.DBEntities.CollectionsTableColumns;
+import com.github.metakol.DBEntities.PhrasesTableColumns;
 import com.github.metakol.DBHandler.DBHandler;
+import com.github.metakol.Launch;
 import com.github.metakol.entities.Collection;
+import com.github.metakol.entities.Phrase;
 import com.github.metakol.entities.User;
 
+import com.github.metakol.helpers.Scenes;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.URL;
 import java.sql.ResultSet;
@@ -23,6 +27,7 @@ import java.util.ResourceBundle;
 
 public class CollectionsSceneController implements Initializable {
 
+    Logger logger = LogManager.getRootLogger();
     User user;
     @FXML
     private Button repeatButton;
@@ -32,24 +37,31 @@ public class CollectionsSceneController implements Initializable {
     private Button testButton;
     @FXML
     private Button deleteCollectionButton;
-
+    @FXML
+    private Label noSelectedCollectionLabel;
 
     @FXML
-    ListView<Collection> collectionsListView;
-    ObservableList<Collection> collections;
+    private ListView<Collection> collectionsListView;
+    private ObservableList<Collection> collectionsObservableList;
+    Collection selectedCollection;
+
     public CollectionsSceneController(User user){
-
         this.user = user;
+        logger.info("ON COLLECTIONS SCENE CONTROLLER");
     }
-    @FXML
-    void onClickRepeat(){
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
-        collections = FXCollections.observableArrayList();
-        collectionsListView.setItems(collections);
-        //тут мы передаем класс, отвечающий за то как элементы списка будут отображаться
+        initListView();
+        getCollectionsFromDB();
+        initSelectionModel();
+        setTooltipForButton(repeatButton, "You'll translate phrases\nfrom English into Russian");
+        setTooltipForButton(studyButton, "You'll translate phrases\nfrom Russian into English");
+        setTooltipForButton(testButton, "You will be given a test \nto check how well you learned the material");
+        setTooltipForButton(deleteCollectionButton, "Click this button\n if you want to delete selected collection");
+    }
+    private void initListView(){
+        collectionsObservableList = FXCollections.observableArrayList();
+        collectionsListView.setItems(collectionsObservableList);
         collectionsListView.setCellFactory(new Callback<ListView<Collection>,ListCell<Collection>>() {
             @Override
             public ListCell<Collection> call(ListView<Collection> param)
@@ -58,21 +70,11 @@ public class CollectionsSceneController implements Initializable {
             }
         });
         //collectionsList.setCellFactory(p -> new CollectionsListCell());
-        getCollectionsFromDB();
-        setTooltipForButton(repeatButton, "You'll translate phrases\nfrom English into Russian");
-        setTooltipForButton(studyButton, "You'll translate phrases\nfrom Russian into English");
-        setTooltipForButton(testButton, "You will be given a test \nto check how well you learned the material");
-        setTooltipForButton(deleteCollectionButton, "Click this button\n if you want to delete selected collection");
     }
-
-    //этот класс устанавливает формат отображения для элемента списка
     static private class CollectionsListCell extends ListCell<Collection>{
         @Override
         protected void updateItem(Collection collection, boolean arg1) {
-            // FX требует, чтобы super.updateItem () был вызван первым
             super.updateItem(collection, arg1);
-
-            // Отображение ячейки, которую вы хотите достичь
             if(collection == null) {
                 this.setText("");
             }
@@ -82,24 +84,55 @@ public class CollectionsSceneController implements Initializable {
         }
     }
     private void getCollectionsFromDB(){
-        String sqll = "SELECT collection_id, name, words_number FROM collections WHERE user_id =2";
         String sql = String.format("SELECT %s, %s, %s FROM %s WHERE %s = %s",
                 CollectionsTableColumns.ID.getNameInDB(), CollectionsTableColumns.NAME.getNameInDB(), CollectionsTableColumns.WORDS_NUMBER.getNameInDB(),
                 CollectionsTableColumns.TABLE_NAME.getNameInDB(), CollectionsTableColumns.USER_ID, user.getID());
         try(DBHandler dbHandler = new DBHandler()){
-            ResultSet resultSet = dbHandler.executeQueryStatement(sqll);
+            ResultSet resultSet = dbHandler.executeQueryStatement(sql);
             while (resultSet.next()){
-                System.out.println("HAS NEXT");
                 Collection collection = new Collection();
-                collection.setID(resultSet.getInt(1));
-                collection.setName(resultSet.getString(2));
-                collection.setPhrasesNumber(resultSet.getInt(3));
-                collections.add(collection);
+                collection.setID(resultSet.getInt(CollectionsTableColumns.ID.getNameInDB()));
+                collection.setName(resultSet.getString(CollectionsTableColumns.NAME.getNameInDB()));
+                collection.setPhrasesNumber(resultSet.getInt(CollectionsTableColumns.WORDS_NUMBER.getNameInDB()));
+
+                getPhrasesFromDB(collection);
+                collectionsObservableList.add(collection);
             }
+            logger.info("Выгрузка коллекций для списка коллекций: Успешно");
         }
         catch(SQLException e){
-            e.printStackTrace();
+            logger.error("Ошибка выгрузки коллекций для списка коллекций\n" +  e.getMessage());
+            throw new RuntimeException(e);
         }
+    }
+    private void getPhrasesFromDB(Collection collection){
+        String sql = String.format("SELECT %s, %s, %s  FROM %s WHERE %s = %s;",
+                PhrasesTableColumns.PHRASE.getNameInDB(), PhrasesTableColumns.TRANSLATION.getNameInDB(), PhrasesTableColumns.DESCRIPTION.getNameInDB(),
+                PhrasesTableColumns.TABLE_NAME.getNameInDB(), PhrasesTableColumns.COLLECTION_ID.getNameInDB(),
+                collection.getID());
+        try(DBHandler dbHandler = new DBHandler()){
+            ResultSet resultSet = dbHandler.executeQueryStatement(sql);
+            while(resultSet.next()){
+                Phrase phrase = new Phrase();
+                phrase.setPhrase(resultSet.getString(PhrasesTableColumns.PHRASE.getNameInDB()));
+                phrase.setTranslation(resultSet.getString(PhrasesTableColumns.TRANSLATION.getNameInDB()));
+                phrase.setDescription(resultSet.getString(PhrasesTableColumns.DESCRIPTION.getNameInDB()));
+                collection.getPhrases().add(phrase);
+            }
+        } catch (SQLException e) {
+            logger.error("Ошибка при добавлении слов в коллекцию\n" + e.getMessage());
+            throw new RuntimeException(e);
+        }
+
+
+    }
+    private void initSelectionModel(){
+        SelectionModel<Collection> collectionSelectionModel = collectionsListView.getSelectionModel();
+
+        collectionSelectionModel.selectedItemProperty().addListener((observableValue, oldItem, item) -> {
+            selectedCollection = item;
+            logger.info("В списке коллекций выбрана коллекция");
+        });
     }
 
     public void setTooltipForButton(Button button, String message){
@@ -107,6 +140,50 @@ public class CollectionsSceneController implements Initializable {
         tooltip.setShowDelay(Duration.millis(50));
         button.setTooltip(tooltip);
     }
+    @FXML
+    void onClickRepeat(MouseEvent event){
+        if(selectedCollection != null){
+            changeToIntermediateScene(event, CollectionsSceneButtons.REPEAT_BUTTON);
+        }
+        else{
+            showNoSelectedCollectionLabel();
+        }
+    }
+    @FXML
+    private void onClickStudy(MouseEvent event){
+        if(selectedCollection != null){
+            changeToIntermediateScene(event, CollectionsSceneButtons.STUDY_BUTTON);
+        }
+        else {
+            showNoSelectedCollectionLabel();
+        }
+    }
+    @FXML
+    private void onClickTest(MouseEvent event){
+        if(selectedCollection != null){
+            changeToIntermediateScene(event, CollectionsSceneButtons.TEST_BUTTON);
+        }
+        else {
+            showNoSelectedCollectionLabel();
+        }
+    }
+    private void changeToIntermediateScene(MouseEvent event, CollectionsSceneButtons buttonInvokingOtherScene){
+        URL url = Launch.class.getResource("scenes/intermediateScene.fxml");
+        Scenes.sceneChange(event,url, new IntermediateSceneController(user, selectedCollection, buttonInvokingOtherScene));
+    }
+    private void showNoSelectedCollectionLabel(){
+        noSelectedCollectionLabel.setStyle("-fx-font-family: Calibri; -fx-font-size: 14px; -fx-text-fill: #990000;");
+        noSelectedCollectionLabel.setText("No selected collection. Please, select collection \nbefore pressing on any button.");
+    }
 
+    @FXML
+    private void onClickGoBack(MouseEvent event){
+        URL url = Launch.class.getResource("scenes/userScene.fxml");
+        Scenes.sceneChange(event, url, new UserSceneController(user));
+    }
+    @FXML
+    private void hideNoSelectedCollectionLabel(){
+        noSelectedCollectionLabel.setText("");
+    }
 
 }

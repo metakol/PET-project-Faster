@@ -2,12 +2,14 @@ package com.github.metakol.helpers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.metakol.entities.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
 
 public class JacksonUserWriterReader {
-    //куда пишем объект и откуда потом берем
+    static Logger logger = LogManager.getRootLogger();
     private static File currentUserFile = new File("src/main/resources/com/github/metakol/userData/currentUser.json");
 
     //записывает
@@ -15,8 +17,10 @@ public class JacksonUserWriterReader {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             objectMapper.writeValue(currentUserFile, user);
+            logger.info("Юзер записан в json файл");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Невозможно записать юзера в json файл.\n" + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -26,9 +30,10 @@ public class JacksonUserWriterReader {
         try {
             ObjectMapper mapper = new ObjectMapper();
             currentUser = mapper.readValue(currentUserFile, User.class);
-            System.out.println(currentUser);
+            logger.info("Юзер прочитан из json файла");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Невозможно прочитать юзера из json файла.\n" + e.getMessage());
+            throw new RuntimeException(e);
         }
         return currentUser;
     }

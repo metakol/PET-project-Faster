@@ -1,18 +1,23 @@
 package com.github.metakol.DBHandler;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.sql.*;
 
 public class DBHandler implements AutoCloseable {
+    Logger logger = LogManager.getRootLogger();
     private static String nameConnection = "org.sqlite.JDBC";
     private Connection connection;
 
     public DBHandler() {
+
         try {
             Class.forName(nameConnection);
             connection = DriverManager.getConnection("jdbc:sqlite:src/main/resources/com/github/metakol/database/PetDB.db");
-            System.out.println("Connected");
         } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+            logger.fatal("КЛАСС ДРАЙВЕРА К БД НЕ НАЙДЕН" + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -23,6 +28,7 @@ public class DBHandler implements AutoCloseable {
             resultSet = statement.executeQuery(sqlQuery);
         }
         catch (SQLException e) {
+            logger.error("SQLException в executeQueryStatement()");
             throw new RuntimeException(e);
         }
         return resultSet;
@@ -33,6 +39,7 @@ public class DBHandler implements AutoCloseable {
             Statement statement = connection.createStatement();
             statement.executeUpdate(sqlQuery);
         } catch (SQLException e) {
+            logger.error("SQLException в executeUpdateStatement()");
             throw new RuntimeException(e);
         }
     }
@@ -41,9 +48,9 @@ public class DBHandler implements AutoCloseable {
         try {
             connection.close();
         } catch (SQLException e) {
+            logger.fatal("НЕ УДАЛОСЬ ЗАКРЫТЬ ПОДКЛЮЧЕНИЕ К БД");
             e.printStackTrace();
         }
-        System.out.println("Closed");
     }
 
 }

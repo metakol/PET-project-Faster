@@ -5,25 +5,27 @@ import com.github.metakol.DBHandler.DBHandler;
 import com.github.metakol.Launch;
 import com.github.metakol.helpers.Scenes;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+
 
 
 public class RegisterSceneController {
+    Logger logger = LogManager.getRootLogger();
+    {
+        logger.info("ON REGISTER SCENE CONTROLLER");
+    }
 
     @FXML
     private Label invalidPassMessage;
+    @FXML
+    private Label nonUniqueLoginMessage;
     @FXML
     private TextField emailField;
     @FXML
@@ -44,18 +46,35 @@ public class RegisterSceneController {
         if (isUniqueLogin(login)) {
             if(isPasswordValid(pass)) {
                 createAccount(login, pass, name);
+                logger.info("Попытка создать аккаунт: Успешно");
                 onClickGoBack(event);
             }
-        } else {
-            System.out.println("Такой логин уже есть!");
         }
+        else {
+            showNonUniqueLoginMessage();
+            logger.info("Попытка создать аккаунт: Безуспешно");
+        }
+    }
+    private boolean isUniqueLogin(String login) {
+        String sql = String.format("SELECT %s FROM %s WHERE %s = '%s';",
+                UsersTableColumns.LOGIN.getNameInDB(), UsersTableColumns.TABLE_NAME.getNameInDB(),
+                UsersTableColumns.LOGIN.getNameInDB(),
+                login);
+        try(DBHandler handler = new DBHandler()){
+            ResultSet resultSet = handler.executeQueryStatement(sql);
+            if(resultSet.next()){
+                return false;
+            }
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        }
+        return true;
     }
 
     private boolean isPasswordValid(String password){
         String pattern = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[._!,-])[0-9a-zA-Z!._,-]{7,20}";
         invalidPassMessage.setStyle("-fx-font-family: Calibri; -fx-text-fill: #990000; -fx-font-size: 14px");
         if(password.matches(pattern)){
-            System.out.println("Password validation successfully");
             return true;
         }
         else if (password.length() < 7 || password.length() > 20){
@@ -70,23 +89,9 @@ public class RegisterSceneController {
             return false;
         }
     }
-
-    private boolean isUniqueLogin(String login) {
-        String sql = String.format("SELECT %s FROM %s WHERE %s = '%s';",
-                UsersTableColumns.LOGIN.getNameInDB(), UsersTableColumns.TABLE_NAME.getNameInDB(),
-                UsersTableColumns.LOGIN.getNameInDB(),
-                login);
-        try(DBHandler handler = new DBHandler()){
-            ResultSet resultSet = handler.executeQueryStatement(sql);
-            if(resultSet.next()){
-                System.out.println("Такой юзер уже есть");
-                return false;
-            }
-        } catch (SQLException throwable) {
-            throwable.printStackTrace();
-        }
-        System.out.println("О, уникальный логин");
-        return true;
+    private void showNonUniqueLoginMessage(){
+        nonUniqueLoginMessage.setStyle("-fx-font-family: Calibri; -fx-text-fill: #990000; -fx-font-size: 14px");
+        nonUniqueLoginMessage.setText("Such email is already present, try to sign in or use another one");
     }
 
     private void createAccount(String login, String pass, String name) {
@@ -98,5 +103,14 @@ public class RegisterSceneController {
         try(DBHandler handler = new DBHandler()) {
             handler.executeUpdateStatement(sql);
         }
+    }
+
+    @FXML
+    private void hideInvalidPassMessage(){
+        invalidPassMessage.setText("");
+    }
+    @FXML
+    private void hideNonUniqueLoginMessage(){
+        nonUniqueLoginMessage.setText("");
     }
 }

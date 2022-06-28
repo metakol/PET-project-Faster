@@ -5,27 +5,29 @@ import com.github.metakol.entities.User;
 import com.github.metakol.helpers.Scenes;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ResourceBundle;
 
 public class UserSceneController implements Initializable {
 
+    Logger logger = LogManager.getRootLogger();
     User user;
 
     public UserSceneController(User user) {
-        System.out.println("Constructor");
+        logger.info("ON USER SCENE CONTROLLER");
         this.user = user;
-        System.out.println(user);
     }
-    @FXML
-    private Button myCollections;
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        setGreeting();
+    }
     @FXML
     private Label greetingLabel;
     @FXML
@@ -35,7 +37,7 @@ public class UserSceneController implements Initializable {
     }
 
     @FXML
-    void onClickExit(MouseEvent event) {
+    void onClickSignOut(MouseEvent event) {
         File file = new File("src/main/resources/com/github/metakol/userData/currentUser.json");
         file.delete();
         URL url = Launch.class.getResource("scenes/mainScene.fxml");
@@ -47,11 +49,6 @@ public class UserSceneController implements Initializable {
         Scenes.sceneChange(event, url, new CollectionsSceneController(user));
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.println("Initialize");
-        setGreeting();
-    }
     private void setGreeting(){
         int currentHourOfDay = LocalTime.now().getHour();
         String greeting;

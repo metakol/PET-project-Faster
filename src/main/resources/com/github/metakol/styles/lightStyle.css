@@ -72,3 +72,27 @@
     -fx-background-color: #065030;
     -fx-text-fill: #98FF98;
 }
+
+.table-view{
+    -fx-background-color: #065030;
+    -fx-border-color: #065030 ;
+}
+.table-view .column-header{
+    -fx-background-color: #18B356;
+    -fx-border-color: #065030;
+    -fx-border-width: 0.5px;
+}
+.table-row-cell:even{
+    -fx-background-color: #18B356;
+}
+.table-row-cell:odd{
+    -fx-background-color: #98FF98;
+
+}
+.table-view .table-cell{
+    -fx-border-color: #065030;
+    -fx-border-width: 0.5px;
+    -fx-font-family: Calibri;
+    -fx-font-size: 14;
+
+}
