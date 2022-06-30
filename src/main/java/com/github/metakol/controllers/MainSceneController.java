@@ -90,7 +90,6 @@ public class MainSceneController {
     }
 
     private void showInvalidLoginOrPasswordMessage() {
-        invalidLoginOrPasswordMessage.setStyle("-fx-font-family: Calibri; -fx-text-fill: #990000; -fx-font-size: 14px");
         invalidLoginOrPasswordMessage.setText("Invalid login or password, try again or go to register");
     }
 

@@ -21,11 +21,11 @@ public class UserSceneController implements Initializable {
     User user;
 
     public UserSceneController(User user) {
-        logger.info("ON USER SCENE CONTROLLER");
         this.user = user;
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        logger.info("ON USER SCENE CONTROLLER");
         setGreeting();
     }
     @FXML

@@ -25,12 +25,14 @@ import java.util.ArrayList;
 
 public class AddCollectionSceneController {
     Logger logger = LogManager.getRootLogger();
+    {
+        logger.info("ON ADD COLLECTION SCENE CONTROLLER");
+    }
     Collection collection;
 
     User user;
 
     public AddCollectionSceneController(User user){
-        logger.info("ON ADD COLLECTION SCENE CONTROLLER");
         this.user = user;
         wordsList = FXCollections.observableList(new ArrayList<Phrase>());
     }
@@ -63,7 +65,7 @@ public class AddCollectionSceneController {
         translationColumn.setCellValueFactory(new PropertyValueFactory<Phrase, String>("translation"));
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<Phrase, String>("description"));
 
-        wordsList.add(new Phrase(phraseField.getText(), translationField.getText(), descriptionField.getText()));
+        wordsList.add(new Phrase(phraseField.getText().trim(), translationField.getText().trim(), descriptionField.getText().trim()));
         wordsTable.setItems(wordsList);
         clearWordEntityFields();
     }

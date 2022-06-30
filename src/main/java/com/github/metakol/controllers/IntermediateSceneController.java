@@ -13,7 +13,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 public class IntermediateSceneController implements Initializable {
@@ -35,12 +34,7 @@ public class IntermediateSceneController implements Initializable {
         this.put(CollectionsSceneButtons.TEST_BUTTON, Launch.class.getResource("scenes/testingScene.fxml"));
         this.put(CollectionsSceneButtons.STUDY_BUTTON, Launch.class.getResource("scenes/studyingScene.fxml"));
     }};
-    final HashMap<CollectionsSceneButtons, Object> CONTROLLER_INSTANCES = new HashMap<>(){{
-        this.put(CollectionsSceneButtons.REPEAT_BUTTON, new RepeatingSceneController(user, currentCollection));
-        this.put(CollectionsSceneButtons.STUDY_BUTTON, new StudyingSceneController(user, currentCollection));
-        this.put(CollectionsSceneButtons.TEST_BUTTON, new TestingSceneController(user, currentCollection));
-    }};
-
+    private HashMap<CollectionsSceneButtons, Object> controllerInstances = new HashMap<>();
     User user;
     Collection currentCollection;
     CollectionsSceneButtons buttonInvokedThisScene;
@@ -50,10 +44,14 @@ public class IntermediateSceneController implements Initializable {
         this.user = user;
         this.currentCollection = col;
         this.buttonInvokedThisScene = buttonInvokedThisScene;
-        logger.info("ON INTERMEDIATE SCENE");
+
+        controllerInstances.put(CollectionsSceneButtons.REPEAT_BUTTON, new RepeatingSceneController(user, currentCollection));
+        controllerInstances.put(CollectionsSceneButtons.STUDY_BUTTON, new StudyingSceneController(user, currentCollection));
+        controllerInstances.put(CollectionsSceneButtons.TEST_BUTTON, new TestingSceneController(user, currentCollection));
     }
     @Override
     public void initialize(URL var1, ResourceBundle var2){
+        logger.info("ON INTERMEDIATE SCENE");
         setMessageLabel();
     }
     private void setMessageLabel(){
@@ -62,7 +60,7 @@ public class IntermediateSceneController implements Initializable {
     @FXML
     private void onClickLetsGo(MouseEvent event){
         Scenes.sceneChange(event, URLS.get(buttonInvokedThisScene),
-                CONTROLLER_INSTANCES.get(buttonInvokedThisScene));
+                controllerInstances.get(buttonInvokedThisScene));
     }
     @FXML
     private void onClickGoBack(MouseEvent event){

@@ -47,10 +47,10 @@ public class CollectionsSceneController implements Initializable {
 
     public CollectionsSceneController(User user){
         this.user = user;
-        logger.info("ON COLLECTIONS SCENE CONTROLLER");
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
+        logger.info("ON COLLECTIONS SCENE CONTROLLER");
         initListView();
         getCollectionsFromDB();
         initSelectionModel();
@@ -172,7 +172,6 @@ public class CollectionsSceneController implements Initializable {
         Scenes.sceneChange(event,url, new IntermediateSceneController(user, selectedCollection, buttonInvokingOtherScene));
     }
     private void showNoSelectedCollectionLabel(){
-        noSelectedCollectionLabel.setStyle("-fx-font-family: Calibri; -fx-font-size: 14px; -fx-text-fill: #990000;");
         noSelectedCollectionLabel.setText("No selected collection. Please, select collection \nbefore pressing on any button.");
     }
 
